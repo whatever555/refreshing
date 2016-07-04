@@ -1,0 +1,6 @@
+.click-me {
+    cursor: pointer;
+    display: inline;
+    padding: 4px;
+    font-weight: bold;
+}

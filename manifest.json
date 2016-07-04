@@ -1,0 +1,35 @@
+{
+    "name": "Refreshing",
+    "description": "Refresh css",
+    "version": "2.222",
+    "permissions": [
+        "activeTab",
+        "storage",
+        "webNavigation",
+        "*://*/*"
+    ],
+    "background": {
+        "scripts": ["background.js", "jquery.js"],
+        "persistent": false
+    },
+        "browser_action": {
+        "default_title": "Refreshing"
+    },
+    "content_scripts": [
+        {
+            "matches": ["https://vserver-eddie/*", "http://vserver-eddie/*"],
+            "js": ["jquery.js","main.js"],
+            "css": [ "main.css"]
+        }
+    ],
+    "icons": {
+        "16": "icon16.png",
+        "48": "icon48.png",
+        "128": "icon128.png"
+    },
+    "web_accessible_resources": [
+        "icon16.png",
+        "icon48.png"
+    ],
+    "manifest_version": 2
+}
