@@ -7,7 +7,6 @@ $(document).ready(function(){
     var cssFiles = [];
     chrome.storage.sync.get('domains', function(itemz) {
         domains = itemz.domains;
-        console.table(domains);
         if (typeof domains === typeof undefined || domains == false || domains == null) {
             domains = '';
         }
