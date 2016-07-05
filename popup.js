@@ -18,7 +18,7 @@ $(document).ready(function(){
                 chrome.storage.sync.set({'domains': domains}, function() {
                     $('.onbutton').addClass('selected');
                         chrome.browserAction.setIcon({'path': 'icon128.png'});
-                        chrome.tabs.reload();
+                        //chrome.tabs.reload();
                 });
             }
             else if($(this).attr('data-toggle')=='off')
@@ -29,7 +29,7 @@ $(document).ready(function(){
                 chrome.storage.sync.set({'domains': domains}, function() {
                     $('.offbutton').addClass('selected');
                         chrome.browserAction.setIcon({'path': 'inactive.png'});
-                        chrome.tabs.reload();
+                        //chrome.tabs.reload();
                 });
             }
         }

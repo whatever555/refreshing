@@ -1,6 +1,6 @@
 {
-    "name": "Refreshing",
-    "description": "Refresh css",
+    "name": "Refrecsser",
+    "description": "Refrecsser",
     "version": "0.1",
     "permissions": [
         "activeTab",

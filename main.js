@@ -1,8 +1,6 @@
 
 var cssFiles = [];
 $(document).ready(function(){
-
-    localStorage.setItem("nowdomain", document.domain);
     $.ajaxSetup({ cache: false });
     var myRand = getRandomInt(0, 99999999999);
     var increment=0;
@@ -55,24 +53,30 @@ $(document).ready(function(){
     function getRandomInt(min, max) {
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }
-
-    $('#header').append('<div class="click-me">Click me</div>');
-
+    
     function refreshCss(){
-        for(var i=0;i<cssFiles.length;i++)
-        {
-            var cssId = 'myCss';  // you could encode the css path itself to generate id..
-            var removeCss = getCssToRemove(cssFiles[i],"css");
-            var head  = document.getElementsByTagName('head')[0];
-            var link  = document.createElement('link');
-            link.id   = cssId;
-            link.rel  = 'stylesheet';
-            link.type = 'text/css';
-            link.href = cssFiles[i]+'?'+myRand+''+increment;
-            link.media = 'all';
-            head.appendChild(link);
-        }
-        increment++;
+        chrome.storage.sync.get('domains', function(itemz) {
+            domains = itemz.domains;
+            if (typeof domains === typeof undefined || domains == false || domains == null) {
+                //continue
+            }else
+            if (domains.indexOf('['+document.domain+']')>-1) {
+                for(var i=0;i<cssFiles.length;i++)
+                {
+                    var cssId = 'myCss';  // you could encode the css path itself to generate id..
+                    var removeCss = getCssToRemove(cssFiles[i],"css");
+                    var head  = document.getElementsByTagName('head')[0];
+                    var link  = document.createElement('link');
+                    link.id   = cssId;
+                    link.rel  = 'stylesheet';
+                    link.type = 'text/css';
+                    link.href = cssFiles[i]+'?'+myRand+''+increment;
+                    link.media = 'all';
+                    head.appendChild(link);
+                }
+                increment++;
+            } 
+        });
 
     }
 
@@ -87,10 +91,7 @@ $(document).ready(function(){
 })
 
 window.addEventListener('error', function(e) {
-//console.log('they issue: '+e.srcElement.baseURI);
-console.table(cssFiles);
-
-cssFiles.remove(getCSSFileName(e.target.href));
+    cssFiles.remove(getCSSFileName(e.target.href));
 }, true);
 
 Array.prototype.remove = function() {

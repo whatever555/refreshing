@@ -25,3 +25,9 @@
 .pop {
     background-color: orange;
 }
+
+
+.option {
+    display: inline;
+    width: 20px;
+}
