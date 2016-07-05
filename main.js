@@ -1,10 +1,11 @@
+
+var cssFiles = [];
 $(document).ready(function(){
 
     localStorage.setItem("nowdomain", document.domain);
     $.ajaxSetup({ cache: false });
     var myRand = getRandomInt(0, 99999999999);
     var increment=0;
-    var cssFiles = [];
     chrome.storage.sync.get('domains', function(itemz) {
         domains = itemz.domains;
         if (typeof domains === typeof undefined || domains == false || domains == null) {
@@ -20,11 +21,12 @@ $(document).ready(function(){
             $data = $(this).attr('href');
             if($data.indexOf('css')>-1 || $data.indexOf('style')>-1)
             {
-                cssFiles.push($(this).attr('href'));
+                cssFiles.push(getCSSFileName($(this).attr('href')));
             }
         })
-        setInterval(refreshCss, 500);
+        setInterval(refreshCss, 750);
     }
+    
     function getCssToRemove(filename, filetype){
         var targetelement=(filetype=="js")? "script" : (filetype=="css")? "link" : "none" //determine element type to create nodelist from
         var targetattr=(filetype=="js")? "src" : (filetype=="css")? "href" : "none" //determine corresponding attribute to test for
@@ -37,7 +39,7 @@ $(document).ready(function(){
                 str.replace("<link rel=\"stylesheet\" type=\"text\\css\" href=\"", "");
                 str.replace("\">", "");
                 var res = str.split("?");
-                if (parseInt(res[1]) < (parseInt(myRand+''+increment) - 3) || res.length==1) {
+                if (parseInt(res[1]) < (parseInt(myRand+''+increment) - 4) || res.length==1) {
                     var $ht = $(allsuspects[i]);
                     if($ht.length)
                     $ht.remove();
@@ -81,4 +83,28 @@ $(document).ready(function(){
         }
         return false;
     }
+    
 })
+
+window.addEventListener('error', function(e) {
+//console.log('they issue: '+e.srcElement.baseURI);
+console.table(cssFiles);
+
+cssFiles.remove(getCSSFileName(e.target.href));
+}, true);
+
+Array.prototype.remove = function() {
+    var what, a = arguments, L = a.length, ax;
+    while (L && this.length) {
+        what = a[--L];
+        while ((ax = this.indexOf(what)) !== -1) {
+            this.splice(ax, 1);
+        }
+    }
+    return this;
+};
+
+function getCSSFileName(str){
+        $linkPieces = str.split("?");
+        return $linkPieces[0];
+}
