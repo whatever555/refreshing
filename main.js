@@ -1,18 +1,36 @@
-
 var cssFiles = [];
+var jsonData=[];
+var currentSiteOptions = {};
+chrome.storage.sync.set({'currentTab': document.domain}, function() {
+});
+
 $(document).ready(function(){
     $.ajaxSetup({ cache: false });
     var myRand = getRandomInt(0, 99999999999);
     var increment=0;
-    chrome.storage.sync.get('domains', function(itemz) {
-        domains = itemz.domains;
-        if (typeof domains === typeof undefined || domains == false || domains == null) {
-            domains = '';
-        }
-        if (domains.indexOf('['+document.domain+']')>-1) {
-            getCssFiles();
-        }
-    });
+    init();
+    
+    
+    function init(){
+        chrome.storage.sync.get('jsonData', function(itemz) {
+            jsonData = itemz.jsonData;
+            if (typeof jsonData === typeof undefined || jsonData == false || jsonData == null) {
+                jsonData = [];
+                currentSiteOptions = {'domain':document.domain, 'active': 'false'};
+                jsonData.push(currentSiteOptions);
+            }else{
+                currentSiteOptions = getItemByDomain(document.domain, jsonData);
+        
+            }
+            
+            if (currentSiteOptions.active === 'true') {
+                getCssFiles();
+            }else{
+                setTimeout(function(){ init(); }, 1000);
+            }
+            
+        });
+    }
 
     function getCssFiles(){
         $('[rel]').each(function(){
@@ -55,12 +73,16 @@ $(document).ready(function(){
     }
     
     function refreshCss(){
-        chrome.storage.sync.get('domains', function(itemz) {
-            domains = itemz.domains;
-            if (typeof domains === typeof undefined || domains == false || domains == null) {
-                //continue
-            }else
-            if (domains.indexOf('['+document.domain+']')>-1) {
+        chrome.storage.sync.get('jsonData', function(itemz) {
+            jsonData = itemz.jsonData;
+            if (typeof jsonData === typeof undefined || jsonData == false || jsonData == null) {
+                jsonData = [];
+                currentSiteOptions = {'domain':document.domain, 'active':'false'};
+                jsonData.push(currentSiteOptions);
+            }else{
+                currentSiteOptions = getItemByDomain(document.domain);
+            }
+            if (currentSiteOptions.active === 'true') {
                 for(var i=0;i<cssFiles.length;i++)
                 {
                     var cssId = 'myCss';  // you could encode the css path itself to generate id..
@@ -85,10 +107,8 @@ $(document).ready(function(){
         for(var i = 0; i < length; i++) {
             if(haystack[i] == needle) return true;
         }
-        return false;
     }
     
-})
 
 window.addEventListener('error', function(e) {
     cssFiles.remove(getCSSFileName(e.target.href));
@@ -109,3 +129,33 @@ function getCSSFileName(str){
         $linkPieces = str.split("?");
         return $linkPieces[0];
 }
+
+
+
+
+function getItemByDomain(domainStr, jsonData){
+    if(jsonData)
+    for(var i=0;i<jsonData.length;i++)
+    {
+        if (!(typeof jsonData[i] === typeof undefined || jsonData[i] == false || jsonData[i] == null))
+        if(jsonData[i].domain === domainStr){
+            return jsonData[i];
+        }
+    }
+    return {'domain':domainStr,'active':false};
+}
+
+function updateJsonItem(currentSiteOptions, jsonData) {
+    for(var i=0;i<jsonData.length;i++)
+    {   
+        if (!(typeof jsonData[i] === typeof undefined || jsonData[i] == false || jsonData[i] == null))
+        if(jsonData[i].domain === currentSiteOptions.domain){
+            jsonData[i] = currentSiteOptions;
+            return jsonData;
+        }
+    }
+    jsonData.push(currentSiteOptions);
+    return jsonData;
+}
+
+});

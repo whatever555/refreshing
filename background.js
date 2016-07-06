@@ -1,8 +1,9 @@
 // Copyright (c) 2011 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
-chrome.tabs.onUpdated.addListener( function (tabId, changeInfo, tab) {
 
+
+chrome.tabs.onUpdated.addListener( function (tabId, changeInfo, tab) {
   chrome.tabs.executeScript(tabId, {file: "setData.js"} );
   if (changeInfo.status == 'complete') {
     // do your things
@@ -21,16 +22,22 @@ chrome.tabs.onActivated.addListener(function(activeInfo) {
 });
 
     function changeIcon(currentTab) {
-        chrome.storage.sync.get('domains', function(itemz) {
-            domains = itemz.domains;
-            if (domains==null || domains == false) {
-                domains='';
+        jsonData=[];
+        currentSiteOptions=[];
+        console.log('Chnage');
+        chrome.storage.sync.get('jsonData', function(itemz) {
+            jsonData = itemz.jsonData;
+            if (typeof jsonData === typeof undefined || jsonData == false || jsonData == null) {
                 chrome.browserAction.setIcon({'path': 'inactive.png'});
-            }else if (domains.indexOf('['+currentTab+']')>-1){
-                chrome.browserAction.setIcon({'path': 'icon128.png'});
             }else{
-                domains = '';
-                chrome.browserAction.setIcon({'path': 'inactive.png'});
+                currentSiteOptions = getItemByDomain(currentTab, jsonData);
+                if (currentSiteOptions.active === 'true')
+                {
+                    chrome.browserAction.setIcon({'path': 'icon128.png'});
+                }
+                else {
+                    chrome.browserAction.setIcon({'path': 'inactive.png'});
+                }
             }
         });
     }
@@ -49,4 +56,16 @@ chrome.tabs.onActivated.addListener(function(activeInfo) {
     domain = domain.split(':')[0];
 
     return domain;
+}
+
+function getItemByDomain(domainStr, jsonData){
+    if(jsonData)
+    for(var i=0;i<jsonData.length;i++)
+    {
+        if (!(typeof jsonData[i] === typeof undefined || jsonData[i] == false || jsonData[i] == null))
+        if(jsonData[i].domain === domainStr){
+            return jsonData[i];
+        }
+    }
+    return {'domain':domainStr,'active':false};
 }
