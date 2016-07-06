@@ -24,16 +24,15 @@ chrome.tabs.onActivated.addListener(function(activeInfo) {
     function changeIcon(currentTab) {
         jsonData=[];
         currentSiteOptions=[];
-        console.log('Chnage');
         chrome.storage.sync.get('jsonData', function(itemz) {
             jsonData = itemz.jsonData;
             if (typeof jsonData === typeof undefined || jsonData == false || jsonData == null) {
                 chrome.browserAction.setIcon({'path': 'inactive.png'});
             }else{
                 currentSiteOptions = getItemByDomain(currentTab, jsonData);
-                if (currentSiteOptions.active === 'true')
+                if (currentSiteOptions.active === true)
                 {
-                    chrome.browserAction.setIcon({'path': 'icon128.png'});
+                    chrome.browserAction.setIcon({'path': 'active.png'});
                 }
                 else {
                     chrome.browserAction.setIcon({'path': 'inactive.png'});

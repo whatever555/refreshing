@@ -7,11 +7,15 @@
 }
 html {
     background: black;
+    height: 250px;
 }
 body {
     box-sizing: border-box;
     padding: 12px;
     border: none;
+}
+span {
+    font-size: 16px;
 }
 .togglebutton {
     box-sizing: border-box;
@@ -27,6 +31,7 @@ body {
     -o-transition: all 0.5s ease;
     transition: all 0.5s ease;
     border: none;
+    width: 100%;
 }
 .onbutton.selected {
     background-color: rgba(0,200,0,.4);
@@ -36,13 +41,16 @@ body {
     background-color: rgba(200,0,0,.4);
     color: white!important;
 }
+.offbutton {
+    margin-left: 8px;
+}
 .pop {
     box-sizing: border-box;
     width: 100%;
+    margin-bottom: 32px;
 }
 .butholder {
     box-sizing: border-box;
-    padding: 12px;
     width: 49%;
     max-width: 50%;
     display: inline-block;

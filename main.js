@@ -8,25 +8,25 @@ $(document).ready(function(){
     $.ajaxSetup({ cache: false });
     var myRand = getRandomInt(0, 99999999999);
     var increment=0;
-    
+
     init();
     function init(checkCSS=true){
         chrome.storage.sync.get('jsonData', function(itemz) {
             jsonData = itemz.jsonData;
             if (typeof jsonData === typeof undefined || jsonData == false || jsonData == null) {
                 jsonData = [];
-                currentSiteOptions = {'domain':document.domain, 'active': 'false'};
+                currentSiteOptions = getDefaultOptionValues(document.domain);
                 jsonData.push(currentSiteOptions);
             }else{
                 currentSiteOptions = getItemByDomain(document.domain, jsonData);
-        
+
             }
-            if (currentSiteOptions.active === 'true') {
+            if (currentSiteOptions.active === true) {
                 getCssFiles(currentSiteOptions,checkCSS);
             }else{
                 setTimeout(function(){ init(); }, 1000);
             }
-            
+
         });
     }
 
@@ -41,8 +41,8 @@ $(document).ready(function(){
         })
         refreshCss(currentSiteOptions);
     }
-    
-    function getCssToRemove(filename, filetype){
+
+    function getCssToRemove(filename, filetype,bufferSize){
         var targetelement=(filetype=="js")? "script" : (filetype=="css")? "link" : "none" //determine element type to create nodelist from
         var targetattr=(filetype=="js")? "src" : (filetype=="css")? "href" : "none" //determine corresponding attribute to test for
         var allsuspects=document.getElementsByTagName(targetelement)
@@ -54,7 +54,7 @@ $(document).ready(function(){
                 str.replace("<link rel=\"stylesheet\" type=\"text\\css\" href=\"", "");
                 str.replace("\">", "");
                 var res = str.split("?");
-                if (parseInt(res[1]) < (parseInt(myRand+''+increment) - 4) || res.length==1) {
+                if (parseInt(res[1]) < (parseInt(myRand+''+increment) - bufferSize) || res.length==1) {
                     var $ht = $(allsuspects[i]);
                     if($ht.length)
                     $ht.remove();
@@ -70,13 +70,13 @@ $(document).ready(function(){
     function getRandomInt(min, max) {
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }
-    
-    function refreshCss(currentSiteOptions){        
-            if (currentSiteOptions.active === 'true') {
+
+    function refreshCss(currentSiteOptions){
+            if (currentSiteOptions.active === true) {
                 for(var i=0;i<cssFiles.length;i++)
                 {
-                    var cssId = 'myCss';  // you could encode the css path itself to generate id..
-                    var removeCss = getCssToRemove(cssFiles[i],"css");
+                    var cssId = 'myCss';
+                    var removeCss = getCssToRemove(cssFiles[i],"css",currentSiteOptions.bufferSize);
                     var head  = document.getElementsByTagName('head')[0];
                     var link  = document.createElement('link');
                     link.id   = cssId;
@@ -87,8 +87,8 @@ $(document).ready(function(){
                     head.appendChild(link);
                 }
                 increment++;
-                setTimeout(function(){ init(false); }, 500);
-            } 
+                setTimeout(function(){ init(false); }, currentSiteOptions.refreshRate);
+            }
 
     }
 
@@ -98,7 +98,7 @@ $(document).ready(function(){
             if(haystack[i] == needle) return true;
         }
     }
-    
+
 
 window.addEventListener('error', function(e) {
     cssFiles.remove(getCSSFileName(e.target.href));
@@ -120,6 +120,10 @@ function getCSSFileName(str){
         return $linkPieces[0];
 }
 
+function getDefaultOptionValues(currentTab){
+    return {'domain':currentTab,'active':false,'refreshRate':500,'bufferSize':3};
+}
+
 
 function getItemByDomain(domainStr, jsonData){
     if(jsonData)
@@ -130,12 +134,12 @@ function getItemByDomain(domainStr, jsonData){
             return jsonData[i];
         }
     }
-    return {'domain':domainStr,'active':false};
+    return getDefaultOptionValues(domainStr);
 }
 
 function updateJsonItem(currentSiteOptions, jsonData) {
     for(var i=0;i<jsonData.length;i++)
-    {   
+    {
         if (!(typeof jsonData[i] === typeof undefined || jsonData[i] == false || jsonData[i] == null))
         if(jsonData[i].domain === currentSiteOptions.domain){
             jsonData[i] = currentSiteOptions;

@@ -29,8 +29,8 @@
         "icon48.png"
     ],
     "browser_action": {
-        "default_title": "Toggle filter on/off",
-        "default_icon": "icon48.png",
+        "default_title": "Click for options",
+        "default_icon": "icon128.png",
         "default_popup": "popup.html"
     },
     "manifest_version": 2
