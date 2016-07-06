@@ -4,8 +4,8 @@ String.prototype.replaceAll = function(search, replacement) {
 };
 
 $(document).ready(function(){
-
-     var currentTab = null;
+    
+    var currentTab = null;
     var domains;
     $('.togglebutton').on('click', function(){
         console.log(domains);
@@ -53,4 +53,7 @@ $(document).ready(function(){
             }
         });
     });
+    $('input[type=range]').on('change',function(){
+        $('#'+$(this).data('display-element')).html($(this).val());
+    })
 })
