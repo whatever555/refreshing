@@ -5,7 +5,6 @@ String.prototype.replaceAll = function(search, replacement) {
 
 var jsonData=[];
 var currentSnapshotInTime=0;
-
 $(document).ready(function(){
 
     var currentTab = null;

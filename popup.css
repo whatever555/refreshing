@@ -7,7 +7,7 @@
 }
 html {
     background: black;
-    height: 250px;
+    height: 245px;
 }
 body {
     box-sizing: border-box;
@@ -47,7 +47,7 @@ span {
 .pop {
     box-sizing: border-box;
     width: 100%;
-    margin-bottom: 32px;
+    margin-bottom: 28px;
 }
 .butholder {
     box-sizing: border-box;
