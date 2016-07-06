@@ -8,10 +8,9 @@ $(document).ready(function(){
     $.ajaxSetup({ cache: false });
     var myRand = getRandomInt(0, 99999999999);
     var increment=0;
+    
     init();
-    
-    
-    function init(){
+    function init(checkCSS=true){
         chrome.storage.sync.get('jsonData', function(itemz) {
             jsonData = itemz.jsonData;
             if (typeof jsonData === typeof undefined || jsonData == false || jsonData == null) {
@@ -22,9 +21,8 @@ $(document).ready(function(){
                 currentSiteOptions = getItemByDomain(document.domain, jsonData);
         
             }
-            
             if (currentSiteOptions.active === 'true') {
-                getCssFiles();
+                getCssFiles(currentSiteOptions,checkCSS);
             }else{
                 setTimeout(function(){ init(); }, 1000);
             }
@@ -32,7 +30,8 @@ $(document).ready(function(){
         });
     }
 
-    function getCssFiles(){
+    function getCssFiles(currentSiteOptions, checkCSS = true){
+        if(checkCSS)
         $('[rel]').each(function(){
             $data = $(this).attr('href');
             if($data.indexOf('css')>-1 || $data.indexOf('style')>-1)
@@ -40,7 +39,7 @@ $(document).ready(function(){
                 cssFiles.push(getCSSFileName($(this).attr('href')));
             }
         })
-        setInterval(refreshCss, 750);
+        refreshCss(currentSiteOptions);
     }
     
     function getCssToRemove(filename, filetype){
@@ -72,16 +71,7 @@ $(document).ready(function(){
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }
     
-    function refreshCss(){
-        chrome.storage.sync.get('jsonData', function(itemz) {
-            jsonData = itemz.jsonData;
-            if (typeof jsonData === typeof undefined || jsonData == false || jsonData == null) {
-                jsonData = [];
-                currentSiteOptions = {'domain':document.domain, 'active':'false'};
-                jsonData.push(currentSiteOptions);
-            }else{
-                currentSiteOptions = getItemByDomain(document.domain);
-            }
+    function refreshCss(currentSiteOptions){        
             if (currentSiteOptions.active === 'true') {
                 for(var i=0;i<cssFiles.length;i++)
                 {
@@ -97,8 +87,8 @@ $(document).ready(function(){
                     head.appendChild(link);
                 }
                 increment++;
+                setTimeout(function(){ init(false); }, 500);
             } 
-        });
 
     }
 
@@ -129,8 +119,6 @@ function getCSSFileName(str){
         $linkPieces = str.split("?");
         return $linkPieces[0];
 }
-
-
 
 
 function getItemByDomain(domainStr, jsonData){
