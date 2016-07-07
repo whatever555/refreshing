@@ -40,7 +40,8 @@ $(document).ready(function(){
                 }
                 getCssFiles(currentSiteOptions,checkCSS);
             }else{
-                setTimeout(function(){ init(); }, 1200);
+                //no need for this now that the hard refresh is on
+                //setTimeout(function(){ init(); }, 1200);
             }
 
         });
