@@ -6,14 +6,13 @@ String.prototype.replaceAll = function(search, replacement) {
 var jsonData=[];
 var currentSnapshotInTime=0;
 $(document).ready(function(){
-
     var currentTab = null;
     var currentSiteOptions=[];
     $('.togglebutton').on('click', function(){
         $but = $(this);
         chrome.storage.sync.get('currentTab', function(itemy) {
             currentTab = itemy.currentTab;
-            currentSiteOptions.domain = currentTab;
+            currentSiteOptions = getItemByDomain(currentTab);
             if(currentTab!=null)
             {
                 $('.togglebutton').removeClass('selected');
@@ -24,12 +23,11 @@ $(document).ready(function(){
                     chrome.storage.sync.set({'jsonData': jsonData}, function() {
                         $('.onbutton').addClass('selected');
                             chrome.browserAction.setIcon({'path': 'active.png'});
-                            //chrome.tabs.reload();
+                            chrome.tabs.reload();
                     });
                 }
                 else if($but.attr('data-toggle')=='off')
                 {
-
                     currentSiteOptions.active = false;
                     jsonData = updateJsonItem(currentSiteOptions, jsonData);
                     chrome.storage.sync.set({'jsonData': jsonData}, function() {

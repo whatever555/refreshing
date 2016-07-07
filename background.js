@@ -25,7 +25,7 @@ chrome.tabs.onActivated.addListener(function(activeInfo) {
         chrome.storage.sync.get('jsonData', function(itemz) {
             jsonData = itemz.jsonData;
             if (typeof jsonData === typeof undefined || jsonData == false || jsonData == null) {
-                chrome.browserAction.setIcon({'path': 'inactive.png'});
+                chrome.browserAction.setIcon({'path': 'icon128.png'});
             }else{
                 currentSiteOptions = getItemByDomain(currentTab, jsonData);
                 if (currentSiteOptions.active === true)
@@ -64,5 +64,9 @@ function getItemByDomain(domainStr, jsonData){
             return jsonData[i];
         }
     }
-    return {'domain':domainStr,'active':false};
+    return getDefaultOptionValues(domainStr);
+}
+
+function getDefaultOptionValues(currentTab){
+    return {'domain':currentTab,'active':false,'refreshRate':500,'bufferSize':3};
 }

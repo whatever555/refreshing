@@ -3,6 +3,7 @@ var jsonData=[];
 var currentSiteOptions = {};
 chrome.storage.sync.set({'currentTab': document.domain}, function() {
 });
+console.log('loaded');
 var messageDisplayed = false;
 var showMessageBool = true;
 $(document).ready(function(){
@@ -17,6 +18,8 @@ $(document).ready(function(){
                 jsonData = [];
                 currentSiteOptions = getDefaultOptionValues(document.domain);
                 jsonData.push(currentSiteOptions);
+                chrome.storage.sync.set({'jsonData': jsonData}, function() {
+                });
             }else{
                 currentSiteOptions = getItemByDomain(document.domain, jsonData);
                 if (typeof jsonData.showMessageBool === typeof undefined || jsonData.showMessageBool == false || jsonData.showMessageBool == null)
@@ -37,7 +40,7 @@ $(document).ready(function(){
                 }
                 getCssFiles(currentSiteOptions,checkCSS);
             }else{
-                setTimeout(function(){ init(); }, 1000);
+                setTimeout(function(){ init(); }, 1200);
             }
 
         });

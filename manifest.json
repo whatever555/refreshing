@@ -1,7 +1,7 @@
 {
     "name": "Refrecsser",
     "description": "Refrecsser",
-    "version": "0.26",
+    "version": ".26",
     "permissions": [
         "activeTab",
         "storage",
