@@ -1,7 +1,6 @@
 var cssFiles = [];
 var jsonData=[];
 var currentSiteOptions = {};
-console.log('LOADED');
 chrome.storage.sync.set({'currentTab': document.domain}, function() {
 });
 var messageDisplayed = false;
