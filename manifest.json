@@ -1,7 +1,7 @@
 {
-    "name": "Refrecsser",
-    "description": "Refrecsser",
-    "version": "26.26",
+    "name": "Refrecsser: Live CSS Refresh",
+    "description": "Refrecsser: Apply CSS changes automatically without having to refresh the page",
+    "version": "26.1",
     "permissions": [
         "activeTab",
         "storage",
