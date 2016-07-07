@@ -7,8 +7,6 @@ chrome.tabs.onUpdated.addListener( function (tabId, changeInfo, tab) {
   chrome.tabs.executeScript(tabId, {file: "setData.js"} );
   if (changeInfo.status == 'complete') {
     // do your things
-    chrome.tabs.executeScript(tabId, {file: "jquery.js"} );
-    chrome.tabs.executeScript(tabId, {file: "main.js"} );
     setTimeout(function() { changeIcon(extractDomain(tab.url)); }, 120);
 
    }

@@ -61,7 +61,6 @@ $(document).ready(function(){
                 chrome.browserAction.setIcon({'path': 'inactive.png'});
                 $('.offbutton').addClass('selected');
             }
-            console.log('SETTig themn'+currentSiteOptions.refreshRate);
             $('#refresh-rate-slider').val(currentSiteOptions.refreshRate);
             $('#buffer-size-slider').val(currentSiteOptions.bufferSize);
 
@@ -88,7 +87,6 @@ $(document).ready(function(){
             if($changedElement.attr('name')=="buffer-size") {
                 currentSiteOptions.bufferSize = parseInt($changedElement.val());
             }
-            console.log(currentSiteOptions);
             updateJsonItem(currentSiteOptions, jsonData);
             chrome.storage.sync.set({'jsonData': jsonData}, function() {
             });

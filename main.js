@@ -1,14 +1,15 @@
 var cssFiles = [];
 var jsonData=[];
 var currentSiteOptions = {};
+console.log('LOADED');
 chrome.storage.sync.set({'currentTab': document.domain}, function() {
 });
-
+var messageDisplayed = false;
+var showMessageBool = true;
 $(document).ready(function(){
     $.ajaxSetup({ cache: false });
     var myRand = getRandomInt(0, 99999999999);
     var increment=0;
-
     init();
     function init(checkCSS=true){
         chrome.storage.sync.get('jsonData', function(itemz) {
@@ -19,9 +20,22 @@ $(document).ready(function(){
                 jsonData.push(currentSiteOptions);
             }else{
                 currentSiteOptions = getItemByDomain(document.domain, jsonData);
-
+                if (typeof jsonData.showMessageBool === typeof undefined || jsonData.showMessageBool == false || jsonData.showMessageBool == null)
+                {
+                    jsonData.showMessageBool = true;
+                    chrome.storage.sync.set({'jsonData': jsonData}, function() {
+                    });
+                }
+                showMessageBool = jsonData.showMessageBool;
             }
             if (currentSiteOptions.active === true) {
+                if (showMessageBool && !messageDisplayed){
+                    $('body').append('<div class="refrecsser-message">Info: Rerescsser is running on this domain</div>');
+                    setTimeout(function(){ 
+                        $(".refrecsser-message").fadeOut("slow"); 
+                    }, 3000 ); 
+                    messageDisplayed=true;
+                }
                 getCssFiles(currentSiteOptions,checkCSS);
             }else{
                 setTimeout(function(){ init(); }, 1000);

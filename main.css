@@ -1,0 +1,11 @@
+.refrecsser-message {
+    position: fixed;
+    top: 0px;
+    width: 100%;
+    padding: 12px;
+    font-size: 18px;
+    background-color: rgba(0,110,0,.8);
+    color: white;
+    text-align: center; 
+    z-index: 999999;
+}
