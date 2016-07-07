@@ -22,13 +22,6 @@ $(document).ready(function(){
                 });
             }else{
                 currentSiteOptions = getItemByDomain(document.domain, jsonData);
-                if (typeof jsonData.showMessageBool === typeof undefined || jsonData.showMessageBool == false || jsonData.showMessageBool == null)
-                {
-                    jsonData.showMessageBool = true;
-                    chrome.storage.sync.set({'jsonData': jsonData}, function() {
-                    });
-                }
-                showMessageBool = jsonData.showMessageBool;
             }
             if (currentSiteOptions.active === true) {
                 if (showMessageBool && !messageDisplayed){
