@@ -1,4 +1,5 @@
 # Refresccer
+https://chrome.google.com/webstore/detail/ndlkimdchjgnpchcpfbpninkkfhgkefc  
 Use refrecsser to automatically refresh your css files while you style your page
 # How to use
 Refresccer needs to be enabled for each specific domain on which you want to use it. 
